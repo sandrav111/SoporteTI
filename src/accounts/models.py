@@ -5,7 +5,7 @@ from django.db import models
 class User(AbstractUser):
     class Role(models.TextChoices):
         REQUESTER = 'solicitante', 'Solicitante'
-        TECHNICAL = 'tecnico', 'Tecnico'
+        TECHNICAL = 'técnico', 'Técnico'
         COORDINATOR = 'coordinador', 'Coordinador TI'
         ADMINISTRATOR = 'administrador', 'Administrador'
 

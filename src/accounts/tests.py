@@ -18,7 +18,7 @@ class AuthenticationAPITests(TestCase):
                 'username': 'usuario_prueba',
                 'email': 'usuario@colegio.edu.co',
                 'role': 'solicitante',
-                'password': 'Segura123*',
+                'password': 'Demo123*',
             },
             format='json',
         )
@@ -29,36 +29,36 @@ class AuthenticationAPITests(TestCase):
 
     def test_login_returns_success_message(self):
         User.objects.create_user(
-            username='tecnico1',
-            full_name='Tecnico Uno',
+            username='técnico1',
+            full_name='Técnico Uno',
             email='tecnico1@colegio.edu.co',
-            password='Segura123*',
-            role='tecnico',
+            password='Segura1234*',
+            role='técnico',
         )
 
         response = self.client.post(
             reverse('api-login'),
-            {'username': 'tecnico1', 'password': 'Segura123*'},
+            {'username': 'técnico1', 'password': 'Segura123*'},
             format='json',
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['message'], 'Autenticacion satisfactoria.')
+        self.assertEqual(response.data['message'], 'Autenticación satisfactoria.')
 
     def test_login_with_invalid_credentials_returns_error(self):
         User.objects.create_user(
             username='usuario_invalido',
             full_name='Usuario Invalido',
             email='usuario_invalido@colegio.edu.co',
-            password='Segura123*',
+            password='Demo1234*',
             role='solicitante',
         )
 
         response = self.client.post(
             reverse('api-login'),
-            {'username': 'usuario_invalido', 'password': 'otra-clave'},
+            {'username': 'usuario_inválido', 'password': 'otra-clave'},
             format='json',
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['message'], 'Error en la autenticacion.')
+        self.assertEqual(response.data['message'], 'Error en la autenticación.')
