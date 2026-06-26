@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle del ticket{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">{{ ticket.code }}</h1>
+        <p class="text-muted mb-0">{{ ticket.title }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="{% url 'tickets:update' ticket.pk %}">Editar</a>
+        <a class="btn btn-outline-danger" href="{% url 'tickets:delete' ticket.pk %}">Eliminar</a>
+        {% if is_support and ticket.status.name != 'Cerrado' %}
+            <a class="btn btn-primary" href="{% url 'tickets:close' ticket.pk %}">Cerrar ticket</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="h5">Informacion general</h2>
+                <p><strong>Descripcion:</strong><br>{{ ticket.description }}</p>
+                <div class="row">
+                    <div class="col-md-6"><strong>Categoria:</strong> {{ ticket.category.name }}</div>
+                    <div class="col-md-6"><strong>Prioridad:</strong> {{ ticket.priority.name }}</div>
+                    <div class="col-md-6 mt-2"><strong>Estado:</strong> {{ ticket.status.name }}</div>
+                    <div class="col-md-6 mt-2"><strong>Asignado a:</strong> {{ ticket.assigned_to.full_name|default:'Sin asignar' }}</div>
+                    <div class="col-md-6 mt-2"><strong>Solicitante:</strong> {{ ticket.requester.full_name|default:ticket.requester.username }}</div>
+                    <div class="col-md-6 mt-2"><strong>Creado:</strong> {{ ticket.created_at|date:'d/m/Y H:i' }}</div>
+                </div>
+                {% if ticket.feedback %}
+                    <div class="alert alert-light border mt-3 mb-0">
+                        <strong>Retroalimentacion de cierre:</strong><br>
+                        {{ ticket.feedback }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5">Historial de notas</h2>
+                {% for note in ticket.notes.all %}
+                    <div class="border rounded p-3 mb-3 bg-light-subtle">
+                        <div class="small text-muted mb-1">{{ note.author.full_name|default:note.author.username }} - {{ note.created_at|date:'d/m/Y H:i' }}</div>
+                        <div>{{ note.content }}</div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted mb-0">No hay notas registradas para este ticket.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5">Agregar nota</h2>
+                <form method="post" action="{% url 'tickets:add-note' ticket.pk %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ note_form.content.label_tag }}
+                        {{ note_form.content }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar nota</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

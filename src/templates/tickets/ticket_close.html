@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Cerrar ticket{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-3">Cerrar ticket {{ ticket.code }}</h1>
+                <p class="text-muted">Agrega una observacion final antes de cerrar el caso.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="feedback" class="form-label">Retroalimentacion final</label>
+                        <textarea id="feedback" name="feedback" rows="4" class="form-control">{{ ticket.feedback }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cerrar ticket</button>
+                    <a class="btn btn-outline-secondary" href="{% url 'tickets:detail' ticket.pk %}">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

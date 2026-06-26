@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-3">Iniciar sesión</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="mb-3">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password.label_tag }}
+                        {{ form.password }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                </form>
+                <p class="small text-muted mt-3 mb-0">Si no tienes cuenta, puedes crear un usuario.</p>
+                <a class="btn btn-link px-0 mt-2" href="{% url 'accounts:register' %}">Registrar usuario</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

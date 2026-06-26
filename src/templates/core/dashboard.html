@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel principal{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Panel principal</h1>
+        <p class="text-muted mb-0">Resumen general de solicitudes e incidencias.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'tickets:create' %}">Crear ticket</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm summary-card">
+            <div class="card-body">
+                <p class="text-muted mb-1">Abiertos</p>
+                <p class="display-6 mb-0">{{ open_count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm summary-card">
+            <div class="card-body">
+                <p class="text-muted mb-1">En progreso</p>
+                <p class="display-6 mb-0">{{ in_progress_count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm summary-card">
+            <div class="card-body">
+                <p class="text-muted mb-1">Cerrados</p>
+                <p class="display-6 mb-0">{{ closed_count }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">Tickets recientes</h2>
+            <a href="{% url 'tickets:list' %}" class="btn btn-outline-primary btn-sm">Ver todos</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Titulo</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in recent_tickets %}
+                        <tr>
+                            <td><a href="{% url 'tickets:detail' ticket.pk %}">{{ ticket.code }}</a></td>
+                            <td>{{ ticket.title }}</td>
+                            <td>{{ ticket.status.name }}</td>
+                            <td>{{ ticket.priority.name }}</td>
+                            <td>{{ ticket.created_at|date:'d/m/Y H:i' }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Aun no hay tickets registrados.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
